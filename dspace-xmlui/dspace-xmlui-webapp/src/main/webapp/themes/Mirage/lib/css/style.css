@@ -1146,3 +1146,7 @@ background-color: rgb(255, 255, 255);
 margin: 2px 2px 0px 2px;
 /* border: 1px solid rgb(240, 240, 210); */
 }
+
+#aspect_discovery_SiteViewer_field_query {
+    width: 500px;
+}
