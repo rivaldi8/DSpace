@@ -156,6 +156,10 @@
                                                     <xsl:text>http://orcid.org/</xsl:text>
                                                     <xsl:value-of select="@orcid" />
                                                 </xsl:attribute>
+                                                <xsl:attribute name="title">
+                                                    <xsl:text>Pàgina ORCID de </xsl:text>
+                                                    <xsl:copy-of select="node()"/>
+                                                </xsl:attribute>
                                                 <span></span> <!-- avoids the XSLT doing strange things -->
                                             </a>
                                         </xsl:if>
