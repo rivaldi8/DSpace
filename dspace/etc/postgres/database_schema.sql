@@ -505,6 +505,15 @@ CREATE INDEX doi_doi_idx ON Doi(doi);
 CREATE INDEX doi_resource_id_and_type_idx ON Doi(resource_id, resource_type_id);
 
 -------------------------------------------------------
+-- Orcid table
+-------------------------------------------------------
+CREATE TABLE Orcid
+(
+  author TEXT,
+  orcid CHAR(19)
+);
+
+-------------------------------------------------------
 --  WorkspaceItem table
 -------------------------------------------------------
 CREATE TABLE WorkspaceItem

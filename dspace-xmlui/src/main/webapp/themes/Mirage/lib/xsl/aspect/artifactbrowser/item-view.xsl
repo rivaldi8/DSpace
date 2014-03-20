@@ -151,6 +151,15 @@
                                           </xsl:if>
 	                                <xsl:copy-of select="node()"/>
                                         </span>
+                                        <xsl:if test="@orcid">
+                                            <a>
+                                                <xsl:attribute name="href">
+                                                    <xsl:text>http://orcid.org/</xsl:text>
+                                                    <xsl:value-of select="@orcid" />
+                                                </xsl:attribute>
+                                                <small>orcid</small>
+                                            </a>
+                                        </xsl:if>
 	                                <xsl:if test="count(following-sibling::dim:field[@element='contributor'][@qualifier='author']) != 0">
 	                                    <xsl:text>; </xsl:text>
 	                                </xsl:if>

@@ -39,6 +39,7 @@ import java.sql.SQLException;
 import java.util.*;
 
 import org.dspace.content.DSpaceObject;
+import org.dspace.identifier.orcid.ORCIDRegistry;
 
 
 /**
@@ -274,6 +275,13 @@ public class ItemAdapter extends AbstractAdapter
                         attributes = new AttributeMap();
                         attributes.put("mdschema",dcv.schema);
                         attributes.put("element", dcv.element);
+                        if (dcv.element.equals("contributor")
+                                || dcv.element.equals("creator")) {
+                            String orcid = ORCIDRegistry.lookup(context, dcv.value);
+
+                            if (orcid != null)
+                                attributes.put("orcid", orcid);
+                        }
                         if (dcv.qualifier != null)
                         {
                             attributes.put("qualifier", dcv.qualifier);
