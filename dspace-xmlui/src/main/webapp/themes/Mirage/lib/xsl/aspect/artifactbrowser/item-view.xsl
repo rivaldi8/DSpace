@@ -150,16 +150,16 @@
                                             <xsl:attribute name="class"><xsl:text>ds-dc_contributor_author-authority</xsl:text></xsl:attribute>
                                           </xsl:if>
 	                                <xsl:copy-of select="node()"/>
-                                        </span>
                                         <xsl:if test="@orcid">
-                                            <a>
+                                            <a class="orcid">
                                                 <xsl:attribute name="href">
                                                     <xsl:text>http://orcid.org/</xsl:text>
                                                     <xsl:value-of select="@orcid" />
                                                 </xsl:attribute>
-                                                <small>orcid</small>
+                                                <span></span> <!-- avoids the XSLT doing strange things -->
                                             </a>
                                         </xsl:if>
+                                        </span>
 	                                <xsl:if test="count(following-sibling::dim:field[@element='contributor'][@qualifier='author']) != 0">
 	                                    <xsl:text>; </xsl:text>
 	                                </xsl:if>

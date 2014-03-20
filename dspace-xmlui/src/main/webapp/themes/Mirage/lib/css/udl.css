@@ -1,0 +1,13 @@
+a.orcid {
+    background-color: #A6CE39;
+    border-radius: 50%;
+    display: inline-block;
+    height: 9px;
+    margin-left: 3px;
+    margin-right: -3px;
+    width: 9px;
+}
+
+a.orcid:hover {
+  background-color: #A6DE39;
+}
