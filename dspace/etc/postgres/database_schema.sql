@@ -510,7 +510,7 @@ CREATE INDEX doi_resource_id_and_type_idx ON Doi(resource_id, resource_type_id);
 CREATE TABLE Orcid
 (
   author TEXT,
-  orcid CHAR(19)
+  orcid VARCHAR(19)
 );
 
 -------------------------------------------------------
