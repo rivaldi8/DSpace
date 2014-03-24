@@ -12,6 +12,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
+import javax.servlet.http.HttpServletResponse;
 import org.apache.avalon.framework.parameters.Parameters;
 import org.apache.cocoon.ProcessingException;
 import org.apache.cocoon.ResourceNotFoundException;
@@ -45,8 +46,6 @@ import org.dspace.browse.BrowseIndex;
 import org.dspace.browse.BrowseInfo;
 import org.dspace.browse.BrowseItem;
 import org.dspace.browse.BrowserScope;
-import org.dspace.sort.SortOption;
-import org.dspace.sort.SortException;
 import org.dspace.content.Collection;
 import org.dspace.content.Community;
 import org.dspace.content.DCDate;
@@ -55,9 +54,10 @@ import org.dspace.content.authority.ChoiceAuthorityManager;
 import org.dspace.core.ConfigurationManager;
 import org.dspace.core.Context;
 import org.dspace.core.LogManager;
+import org.dspace.identifier.orcid.ORCIDRegistry;
+import org.dspace.sort.SortException;
+import org.dspace.sort.SortOption;
 import org.xml.sax.SAXException;
-
-import javax.servlet.http.HttpServletResponse;
 
 /**
  * Implements all the browse functionality (browse by title, subject, authors,
@@ -344,6 +344,10 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
                     Cell cell = singleTable.addRow().addCell();
                     cell.addXref(super.generateURL(BROWSE_URL_BASE, queryParams),
                           singleEntry[0]);
+
+                    if (type.equals("author"))
+                        addORCIDLink(cell, singleEntry[0]);
+
                     if (StringUtils.isNotEmpty(singleEntry[2]))
                     {
                         cell.addContent(" ["+singleEntry[2]+"]");
@@ -968,6 +972,17 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
         }
         
         return trailMessage;
+    }
+
+    private void addORCIDLink(Cell cell, String author) throws WingException {
+        String orcid = null;
+
+        try {
+            orcid = ORCIDRegistry.lookup(context, author);
+        } catch (SQLException e) {}
+
+        if (orcid != null)
+            cell.addXref("http://orcid.org/" + orcid, " ", "orcid");
     }
 }
 
