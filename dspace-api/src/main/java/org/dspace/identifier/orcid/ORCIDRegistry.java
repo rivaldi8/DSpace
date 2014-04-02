@@ -19,7 +19,7 @@ public class ORCIDRegistry {
         TableRow orcidRow = DatabaseManager.querySingleTable(context, "Orcid",
                                                              sql, author);
         if (orcidRow == null)
-            return null;
+            return "";
 
         if (orcidRow.isColumnNull("orcid")) {
             log.error("An author with an empty orcid column was found in the database: "

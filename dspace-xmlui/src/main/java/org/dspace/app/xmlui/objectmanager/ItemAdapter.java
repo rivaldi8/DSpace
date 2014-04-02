@@ -279,7 +279,7 @@ public class ItemAdapter extends AbstractAdapter
                                 || dcv.element.equals("creator")) {
                             String orcid = ORCIDRegistry.lookup(context, dcv.value);
 
-                            if (orcid != null)
+                            if (!orcid.isEmpty())
                                 attributes.put("orcid", orcid);
                         }
                         if (dcv.qualifier != null)

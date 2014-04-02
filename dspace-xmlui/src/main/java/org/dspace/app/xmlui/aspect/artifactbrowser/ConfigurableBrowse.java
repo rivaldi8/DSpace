@@ -981,7 +981,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
             orcid = ORCIDRegistry.lookup(context, author);
         } catch (SQLException e) {}
 
-        if (orcid != null)
+        if (!orcid.isEmpty())
             cell.addXref("http://orcid.org/" + orcid, " ", "orcid");
     }
 }
