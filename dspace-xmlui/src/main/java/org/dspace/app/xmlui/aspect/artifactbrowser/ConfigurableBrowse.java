@@ -979,10 +979,10 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
 
         try {
             orcid = ORCIDRegistry.lookup(context, author);
-        } catch (SQLException e) {}
 
-        if (!orcid.isEmpty())
-            cell.addXref("http://orcid.org/" + orcid, " ", "orcid");
+            if (!orcid.isEmpty())
+                cell.addXref("http://orcid.org/" + orcid, " ", "orcid");
+        } catch (SQLException e) {}
     }
 }
 
