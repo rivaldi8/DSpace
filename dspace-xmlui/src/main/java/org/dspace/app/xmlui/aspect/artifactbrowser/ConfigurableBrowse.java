@@ -983,7 +983,7 @@ public class ConfigurableBrowse extends AbstractDSpaceTransformer implements
             if (!orcid.isEmpty())
                 cell.addXref("http://orcid.org/" + orcid, " ", "orcid");
         } catch (SQLException e) {
-            log.warn("Error looking up ORCID", e);
+            log.debug("Error looking up ORCID", e);
         }
     }
 }
