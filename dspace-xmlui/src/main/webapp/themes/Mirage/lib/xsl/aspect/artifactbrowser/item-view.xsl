@@ -150,19 +150,7 @@
                                             <xsl:attribute name="class"><xsl:text>ds-dc_contributor_author-authority</xsl:text></xsl:attribute>
                                           </xsl:if>
 	                                <xsl:copy-of select="node()"/>
-                                        <xsl:if test="@orcid">
-                                            <a class="orcid">
-                                                <xsl:attribute name="href">
-                                                    <xsl:text>http://orcid.org/</xsl:text>
-                                                    <xsl:value-of select="@orcid" />
-                                                </xsl:attribute>
-                                                <xsl:attribute name="title">
-                                                    <xsl:text>Pàgina ORCID de </xsl:text>
-                                                    <xsl:copy-of select="node()"/>
-                                                </xsl:attribute>
-                                                <span></span> <!-- avoids the XSLT doing strange things -->
-                                            </a>
-                                        </xsl:if>
+                                        <xsl:call-template name="orcid-dot" />
                                         </span>
 	                                <xsl:if test="count(following-sibling::dim:field[@element='contributor'][@qualifier='author']) != 0">
 	                                    <xsl:text>; </xsl:text>
@@ -172,6 +160,7 @@
 	                        <xsl:when test="dim:field[@element='creator']">
 	                            <xsl:for-each select="dim:field[@element='creator']">
 	                                <xsl:copy-of select="node()"/>
+                                    <xsl:call-template name="orcid-dot" />
 	                                <xsl:if test="count(following-sibling::dim:field[@element='creator']) != 0">
 	                                    <xsl:text>; </xsl:text>
 	                                </xsl:if>
@@ -180,6 +169,7 @@
 	                        <xsl:when test="dim:field[@element='contributor']">
 	                            <xsl:for-each select="dim:field[@element='contributor']">
 	                                <xsl:copy-of select="node()"/>
+                                    <xsl:call-template name="orcid-dot" />
 	                                <xsl:if test="count(following-sibling::dim:field[@element='contributor']) != 0">
 	                                    <xsl:text>; </xsl:text>
 	                                </xsl:if>
@@ -189,7 +179,172 @@
 	                            <i18n:text>xmlui.dri2xhtml.METS-1.0.no-author</i18n:text>
 	                        </xsl:otherwise>
 	                    </xsl:choose>
-	            </div>
+	                </td>
+	            </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- Other Author(s) row -->
+          <xsl:when test="$clause = 4 and (dim:field[@element='contributor'][not(@qualifier='author')])">
+                    <tr class="ds-table-row {$phase}">
+	                <th><i18n:text>xmlui.dri2xhtml.METS-1.0.item-other-authors</i18n:text>:</th>
+	                <td>
+	                    <xsl:choose>
+	                        <xsl:when test="dim:field[@element='contributor'][not(@qualifier='author')]">
+	                            <xsl:for-each select="dim:field[@element='contributor'][not(@qualifier='author')]">
+                                        <span>
+                                          <xsl:if test="@authority">
+                                            <xsl:attribute name="class"><xsl:text>ds-dc_contributor_author-authority</xsl:text></xsl:attribute>
+                                          </xsl:if>
+	                                <xsl:copy-of select="node()"/>
+                                    <xsl:call-template name="orcid-dot" />
+                                        </span>
+	                                <xsl:if test="count(following-sibling::dim:field[@element='contributor'][not(@qualifier='author')]) != 0">
+	                                    <xsl:text>; </xsl:text>
+	                                </xsl:if>
+	                            </xsl:for-each>
+	                        </xsl:when>
+	                        <xsl:when test="dim:field[@element='contributor']">
+	                            <xsl:for-each select="dim:field[@element='contributor']">
+	                                <xsl:copy-of select="node()"/>
+                                    <xsl:call-template name="orcid-dot" />
+	                                <xsl:if test="count(following-sibling::dim:field[@element='contributor']) != 0">
+	                                    <xsl:text>; </xsl:text>
+	                                </xsl:if>
+	                            </xsl:for-each>
+	                        </xsl:when>
+	                        <xsl:otherwise>
+	                            <i18n:text>xmlui.dri2xhtml.METS-1.0.no-author</i18n:text>
+	                        </xsl:otherwise>
+	                    </xsl:choose>
+	                </td>
+	            </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- Subject row -->
+          <xsl:when test="$clause = 5 and dim:field[@element='subject']">
+                    <tr class="ds-table-row {$phase}">
+	                <th><i18n:text>xmlui.dri2xhtml.METS-1.0.item-subject</i18n:text>:</th>
+	                <td>
+			    <xsl:for-each select="dim:field[@element='subject']">
+				<xsl:copy-of select="node()"/>
+				<xsl:if test="count(following-sibling::dim:field[@element='subject']) != 0">
+				    <xsl:text>; </xsl:text>
+				</xsl:if>
+			    </xsl:for-each>
+	                </td>
+	            </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- date.issued row -->
+          <xsl:when test="$clause = 6 and (dim:field[@element='date' and @qualifier='issued' and descendant::text()])">
+                    <tr class="ds-table-row {$phase}">
+						 <th><i18n:text>xmlui.dri2xhtml.METS-1.0.item-date</i18n:text>:</th>
+	                <td>
+		                <xsl:for-each select="dim:field[@element='date' and @qualifier='issued']">
+		                	<xsl:copy-of select="substring(./node(),1,10)"/>
+		                	 <xsl:if test="count(following-sibling::dim:field[@element='date' and @qualifier='issued']) != 0">
+	                    	<br/>
+	                    </xsl:if>
+		                </xsl:for-each>
+	                </td>
+	            </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- Publisher row -->
+          <xsl:when test="$clause = 7 and dim:field[@element='publisher']">
+                    <tr class="ds-table-row {$phase}">
+						 <th><i18n:text>xmlui.dri2xhtml.METS-1.0.item-publisher</i18n:text>:</th>
+	                <td>
+			    <xsl:for-each select="dim:field[@element='publisher']">
+				<xsl:copy-of select="node()"/>
+				<xsl:if test="count(following-sibling::dim:field[@element='publisher']) != 0">
+				    <xsl:text>; </xsl:text>
+				</xsl:if>
+			    </xsl:for-each>
+	                </td>
+	            </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- Is part of row -->
+          <xsl:when test="$clause = 8 and dim:field[@element='relation' and @qualifier='ispartof']">
+                    <tr class="ds-table-row {$phase}">
+						 <th><i18n:text>xmlui.dri2xhtml.METS-1.0.item-relation-ispartof</i18n:text>:</th>
+	                <td>
+			    <xsl:for-each select="dim:field[@element='relation' and @qualifier='ispartof']">
+				<xsl:copy-of select="node()"/>
+				<xsl:if test="count(following-sibling::dim:field[@element='relation' and @qualifier='ispartof']) != 0">
+				    <xsl:text>; </xsl:text>
+				</xsl:if>
+			    </xsl:for-each>
+	                </td>
+	            </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- Collection row -->
+          <xsl:when test="$clause = 9 and dim:field[@element='relation' and @qualifier='ispartofseries']">
+                    <tr class="ds-table-row {$phase}">
+						 <th><i18n:text>xmlui.dri2xhtml.METS-1.0.item-relation-ispartofseries</i18n:text>:</th>
+	                <td>
+			    <xsl:for-each select="dim:field[@element='relation' and @qualifier='ispartofseries']">
+				<xsl:copy-of select="node()"/>
+				<xsl:if test="count(following-sibling::dim:field[@element='relation' and @qualifier='ispartofseries']) != 0">
+				    <xsl:text>; </xsl:text>
+				</xsl:if>
+			    </xsl:for-each>
+	                </td>
+	            </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- Abstract row -->
+          <xsl:when test="$clause = 10 and (dim:field[@element='description' and @qualifier='abstract' and descendant::text()])">
+		    <tr class="ds-table-row {$phase}">
+			<td><span class="bold"><i18n:text>xmlui.dri2xhtml.METS-1.0.item-abstract</i18n:text>:</span></td>
+			<td>
+			<xsl:copy-of select="dim:field[@element='description' and @qualifier='abstract'][1]/node()"/>
+			</td>
+		    </tr>
+              <xsl:call-template name="itemSummaryView-DIM-fields">
+                <xsl:with-param name="clause" select="($clause + 1)"/>
+                <xsl:with-param name="phase" select="$otherPhase"/>
+              </xsl:call-template>
+          </xsl:when>
+
+          <!-- Nota row -->
+          <xsl:when test="$clause = 11 and (dim:field[@element='description' and not(@qualifier)])">
+		    <tr class="ds-table-row {$phase}">
+			<td><span class="bold"><i18n:text>xmlui.dri2xhtml.METS-1.0.item-description</i18n:text>:</span></td>
+			<td>
+			<xsl:copy-of select="dim:field[@element='description' and not(@qualifier)][1]/node()"/>
+			</td>
+		    </tr>
               <xsl:call-template name="itemSummaryView-DIM-fields">
                 <xsl:with-param name="clause" select="($clause + 1)"/>
                 <xsl:with-param name="phase" select="$otherPhase"/>
@@ -321,6 +476,21 @@
         <xsl:apply-templates select="mets:fileSec/mets:fileGrp[@USE='CC-LICENSE']"/>
     </xsl:template>
 
+    <xsl:template name="orcid-dot">
+        <xsl:if test="@orcid">
+            <a class="orcid">
+                <xsl:attribute name="href">
+                    <xsl:text>http://orcid.org/</xsl:text>
+                    <xsl:value-of select="@orcid" />
+                </xsl:attribute>
+                <xsl:attribute name="title">
+                    <xsl:text>Pàgina ORCID de </xsl:text>
+                    <xsl:copy-of select="node()"/>
+                </xsl:attribute>
+                <span></span> <!-- avoids the XSLT doing strange things -->
+            </a>
+        </xsl:if>
+    </xsl:template>
 
     <xsl:template match="dim:dim" mode="itemDetailView-DIM">
         <table class="ds-includeSet-table detailtable">
