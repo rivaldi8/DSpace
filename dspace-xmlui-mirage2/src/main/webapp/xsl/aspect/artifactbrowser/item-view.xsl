@@ -238,12 +238,14 @@
                                     <xsl:attribute name="class"><xsl:text>ds-dc_contributor_author-authority</xsl:text></xsl:attribute>
                                 </xsl:if>
                                 <xsl:copy-of select="node()"/>
+                                <xsl:call-template name="orcid-dot" />
                             </div>
                         </xsl:for-each>
                     </xsl:when>
                     <xsl:when test="dim:field[@element='creator']">
                         <xsl:for-each select="dim:field[@element='creator']">
                             <xsl:copy-of select="node()"/>
+                            <xsl:call-template name="orcid-dot" />
                             <xsl:if test="count(following-sibling::dim:field[@element='creator']) != 0">
                                 <xsl:text>; </xsl:text>
                             </xsl:if>
@@ -253,6 +255,7 @@
                         <xsl:for-each select="dim:field[@element='contributor']">
                             <div>
                                 <xsl:copy-of select="node()"/>
+                                <xsl:call-template name="orcid-dot" />
                             </div>
 
                         </xsl:for-each>
@@ -950,5 +953,20 @@
         <i18n:text i18n:key="{$mimetype-key}"><xsl:value-of select="$mimetype"/></i18n:text>
     </xsl:template>
 
+    <xsl:template name="orcid-dot">
+        <xsl:if test="@orcid">
+            <a class="orcid">
+                <xsl:attribute name="href">
+                    <xsl:text>http://orcid.org/</xsl:text>
+                    <xsl:value-of select="@orcid" />
+                </xsl:attribute>
+                <xsl:attribute name="title">
+                    <xsl:text>Pàgina ORCID de </xsl:text>
+                    <xsl:copy-of select="node()"/>
+                </xsl:attribute>
+                <span></span> <!-- avoids the XSLT doing strange things -->
+            </a>
+        </xsl:if>
+    </xsl:template>
 
 </xsl:stylesheet>
